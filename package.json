@@ -1,0 +1,7 @@
+{
+  "main": "main.js",
+  "scripts": {
+    "tsc": "tsc -p . && npx serve ."
+  },
+  "type": "module"
+}
