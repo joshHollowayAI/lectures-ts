@@ -1,7 +1,14 @@
 {
   "main": "main.js",
   "scripts": {
-    "tsc": "tsc -p . && npx serve ."
+    "test": "vitest",
+    "tsc": "tsc -p . && node main.js"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "mathjs": "^15.2.0"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.2"
+  }
 }
