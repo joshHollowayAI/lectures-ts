@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "rewriteRelativeImportExtensions": true,
+    "outDir": "dist"
   }
 }

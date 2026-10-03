@@ -1,7 +1,7 @@
 {
   "files.exclude": {
-    "**/*.js": true,
-    "**/tsconfig.json": true,
+    // "**/*.js": true,
+    "**/tsconfig.json": false,
     ".gitignore": true,
     "node_modules": true,
     "package-lock.json": true,

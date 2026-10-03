@@ -1,8 +1,11 @@
 {
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
     "test": "vitest",
-    "tsc": "tsc -p . && node main.js",
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "build:watch": "tsc --watch",
+    "start:watch": "node --watch dist/main.js",
     "lesson": "bash scripts/lesson.sh",
     "help": "node scripts/help.mjs"
   },
