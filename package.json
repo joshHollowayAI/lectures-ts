@@ -2,13 +2,16 @@
   "main": "main.js",
   "scripts": {
     "test": "vitest",
-    "tsc": "tsc -p . && node main.js"
+    "tsc": "tsc -p . && node main.js",
+    "lesson": "bash scripts/lesson.sh",
+    "help": "node scripts/help.mjs"
   },
   "type": "module",
   "dependencies": {
-    "mathjs": "^15.2.0"
+    "express": "^5.2.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "vitest": "^5.0.2"
   }
 }
