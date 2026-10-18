@@ -1,15 +1,12 @@
 import express from 'express';
 import { logStatus, logError } from './logging.ts';
 import { isValidTitle } from './validation.ts';
-
-type Task = {
-  id: number;
-  title: string;
-};
+import { findTask } from './lib.ts';
+import type { Task } from './types.ts'
 
 const tasks: Task[] = [
- { id: 1, title: 'record a youtube video' },
- { id: 2, title: 'get groceries' },
+ { id: 1, title: 'record a youtube video', completedAt: null },
+ { id: 2, title: 'get groceries', completedAt: null },
 ];
 
 
@@ -36,7 +33,8 @@ app.get('/tasks/:id', (req, res) => {
   const id = Number( req.params.id );
   logStatus(`GET: /tasks/${id}`, 'green')
 
-  const task = tasks.find((t: Task) => t.id === id);
+  // const task = tasks.find((t: Task) => t.id === id);
+  const task = findTask(tasks, id);
 
   if (!task) {
     res.status(404).json({ error: 'Task not found' });
@@ -58,12 +56,35 @@ app.post('/tasks', (req, res) => {
     return;
   }
 
-  const task: Task = { id: tasks.length + 1, title: title.trim() };
+  const task: Task = { 
+    id: tasks.length + 1, 
+    title: title.trim(), 
+    completedAt: null 
+  };
 
   tasks.push(task);
   console.log('tasks: ', tasks);
 
   res.status(201).json(task);
+});
+
+// ==============================================
+
+app.get('/tasks/:id/complete', (req, res) => {
+  logStatus(`POST: /tasks/${req.params.id}/complete`, 'green');
+
+  const id = Number(req.params.id);
+  const task = findTask(tasks, id);
+  if (!task) {
+    res.status(404).json({ error: 'Task not found' });
+    return;
+  }
+
+  if (task.completedAt === null) {
+    task.completedAt = new Date().toISOString();
+  }
+  
+  res.json(task);
 });
 
 // ==============================================
