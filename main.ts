@@ -1,5 +1,6 @@
 import express from 'express';
-import { styleText } from 'node:util';
+import { logStatus, logError } from './logging.ts';
+import { isValidTitle } from './validation.ts';
 
 type Task = {
   id: number;
@@ -11,7 +12,6 @@ const tasks: Task[] = [
  { id: 2, title: 'get groceries' },
 ];
 
-let nextId = 3;
 
 // ==============================================
 
@@ -26,7 +26,7 @@ app.use(express.json());
 // ==============================================
 
 app.get('/tasks', (req, res) => {
-  console.log(styleText(['green', 'bold'], 'GET: /tasks'));
+  logStatus('GET: /tasks', 'green');
   res.json(tasks);
 });
 
@@ -34,7 +34,7 @@ app.get('/tasks', (req, res) => {
 
 app.get('/tasks/:id', (req, res) => {
   const id = Number( req.params.id );
-  console.log(styleText(['green', 'bold'], `GET: /tasks/${id}`));
+  logStatus(`GET: /tasks/${id}`, 'green')
 
   const task = tasks.find((t: Task) => t.id === id);
 
@@ -48,12 +48,17 @@ app.get('/tasks/:id', (req, res) => {
 // ==============================================
 
 app.post('/tasks', (req, res) => {
-  console.log(styleText(['green', 'bold'], 'POST: /tasks'));
+  logStatus('POST: /tasks', 'green');
 
   console.log('body: ', req.body);
 
-  const task: Task = { id: nextId, title: req.body?.title };
-  nextId++;
+  const title = req.body?.title;
+  if( !isValidTitle(title) ) {
+    res.status(400).json({ error: 'Title must be a non-empty string' });
+    return;
+  }
+
+  const task: Task = { id: tasks.length + 1, title: title.trim() };
 
   tasks.push(task);
   console.log('tasks: ', tasks);
@@ -66,7 +71,7 @@ app.post('/tasks', (req, res) => {
 app.listen(PORT, (error) => {
 
   if (error) {
-    console.error('error: ', error);
+    logError('error: ', error);
     process.exitCode = 1;
     return;
   }
