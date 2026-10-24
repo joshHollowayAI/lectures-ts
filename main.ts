@@ -9,7 +9,6 @@ const tasks: Task[] = [
  { id: 2, title: 'get groceries', completedAt: null },
 ];
 
-
 // ==============================================
 
 const app = express();
@@ -70,7 +69,7 @@ app.post('/tasks', (req, res) => {
 
 // ==============================================
 
-app.get('/tasks/:id/complete', (req, res) => {
+app.post('/tasks/:id/complete', (req, res) => {
   logStatus(`POST: /tasks/${req.params.id}/complete`, 'green');
 
   const id = Number(req.params.id);
@@ -85,6 +84,45 @@ app.get('/tasks/:id/complete', (req, res) => {
   }
   
   res.json(task);
+});
+
+// ==============================================
+
+app.patch('/tasks/:id', (req, res) => {
+
+  const id = Number(req.params.id);
+  logStatus(`PATCH: /tasks/:${id}`, 'green');
+
+  const task = findTask(tasks, id);
+  if (!task) {
+    res.status(404).json({ error: 'Task not found' });
+    return;
+  }
+
+  const title = req.body?.title;
+  if( !isValidTitle(title) ) {
+    res.status(400).json({ error: 'Title must be a non-empty string' });
+    return;
+  }
+
+  task.title = title.trim();
+  res.json(task);
+});
+
+// ==============================================
+
+app.delete('/tasks/:id', (req, res) => {
+
+  const id = Number(req.params.id);
+  logStatus(`DELETE: /taks/${id}`, 'blue');
+
+  const index = tasks.findIndex((t: Task) => t.id === id);
+  if (index === -1) {
+    res.status(404).json({ error: 'Task not found' });
+  }
+
+  tasks.splice(index, 1);
+  res.status(204).end();
 });
 
 // ==============================================
